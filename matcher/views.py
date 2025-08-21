@@ -27,11 +27,6 @@ def login_view(request):
     return render(request, 'login.html')
 
 
-def logout_view(request):
-    logout(request)
-    return redirect('login')
-
-
 from .models import JobDescription
 
 @login_required
@@ -176,3 +171,4 @@ def send_rejected(request):
             'top_resumes': top_resumes,
             'top_resume_ids': top_ids
         })
+
