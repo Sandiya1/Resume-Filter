@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome - Resume Matcher</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Background with professional images */
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: linear-gradient(135deg, rgba(10, 10, 10, 0.9) 0%, rgba(26, 11, 46, 0.85) 50%, rgba(22, 33, 62, 0.9) 100%),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><defs><pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse"><path d="M 60 0 L 0 0 0 60" fill="none" stroke="rgba(139,92,246,0.05)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/><g opacity="0.1"><circle cx="200" cy="100" r="3" fill="%23a855f7"/><circle cx="400" cy="200" r="2" fill="%23c084fc"/><circle cx="600" cy="150" r="4" fill="%238b5cf6"/><circle cx="800" cy="300" r="3" fill="%23a855f7"/><circle cx="1000" cy="250" r="2" fill="%23c084fc"/><circle cx="300" cy="400" r="3" fill="%238b5cf6"/><circle cx="700" cy="500" r="4" fill="%23a855f7"/><circle cx="150" cy="350" r="2" fill="%23c084fc"/></g></svg>');
+            background-size: cover, 60px 60px;
+            background-position: center, 0 0;
+            animation: backgroundShift 20s ease-in-out infinite;
+        }
+        
+        @keyframes backgroundShift {
+            0%, 100% { background-position: center, 0 0; }
+            50% { background-position: center, -30px -30px; }
+        }
+        
+        /* Professional resume/document graphics */
+        .bg-graphics {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.03;
+        }
+        
+        .document {
+            position: absolute;
+            width: 60px;
+            height: 80px;
+            background: linear-gradient(135deg, #8b5cf6, #a855f7);
+            border-radius: 4px;
+            animation: floatDocument 15s infinite ease-in-out;
+        }
+        
+        .document::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            right: 8px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 1px;
+            box-shadow: 0 6px 0 rgba(255, 255, 255, 0.6),
+                        0 12px 0 rgba(255, 255, 255, 0.4),
+                        0 18px 0 rgba(255, 255, 255, 0.6),
+                        0 24px 0 rgba(255, 255, 255, 0.4);
+        }
+        
+        .document:nth-child(1) { top: 20%; left: 10%; animation-delay: -2s; transform: rotate(15deg); }
+        .document:nth-child(2) { top: 60%; left: 85%; animation-delay: -8s; transform: rotate(-10deg); }
+        .document:nth-child(3) { top: 40%; left: 90%; animation-delay: -12s; transform: rotate(20deg); }
+        .document:nth-child(4) { top: 80%; left: 5%; animation-delay: -18s; transform: rotate(-15deg); }
+        .document:nth-child(5) { top: 10%; left: 80%; animation-delay: -5s; transform: rotate(8deg); }
+        
+        @keyframes floatDocument {
+            0%, 100% { transform: translateY(0px) rotate(var(--rotation, 0deg)); opacity: 0.03; }
+            25% { transform: translateY(-20px) rotate(calc(var(--rotation, 0deg) + 5deg)); opacity: 0.06; }
+            50% { transform: translateY(-10px) rotate(var(--rotation, 0deg)); opacity: 0.04; }
+            75% { transform: translateY(-30px) rotate(calc(var(--rotation, 0deg) - 3deg)); opacity: 0.05; }
+        }
+        
+        /* Main container - landscape layout */
+        .container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .welcome-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            max-width: 1200px;
+            width: 100%;
+            align-items: center;
+        }
+        
+        /* Left side - Hero content */
+        .hero-content {
+            animation: slideInLeft 1.2s ease-out;
+        }
+        
+        .hero-title {
+            color: #f8fafc;
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+            animation: titleGlow 3s ease-in-out infinite alternate;
+        }
+        
+        @keyframes titleGlow {
+            0% { filter: drop-shadow(0 0 20px rgba(248, 250, 252, 0.1)); }
+            100% { filter: drop-shadow(0 0 40px rgba(139, 92, 246, 0.3)); }
+        }
+        
+        .hero-subtitle {
+            color: #a855f7;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+        
+        .hero-description {
+            color: #cbd5e1;
+            font-size: 1.2rem;
+            line-height: 1.7;
+            margin-bottom: 40px;
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+        
+        /* Right side - Interactive card */
+        .welcome-card {
+            background: rgba(17, 24, 39, 0.9);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 32px;
+            padding: 48px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(139, 92, 246, 0.2);
+            animation: slideInRight 1.2s ease-out;
+            transform-style: preserve-3d;
+        }
+        
+        @keyframes slideInLeft {
+            0% {
+                opacity: 0;
+                transform: translateX(-100px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes slideInRight {
+            0% {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Glowing border effect */
+        .welcome-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 32px;
+            padding: 2px;
+            background: linear-gradient(45deg, 
+                transparent, 
+                rgba(139, 92, 246, 0.6), 
+                rgba(168, 85, 247, 0.8),
+                rgba(192, 132, 252, 0.6),
+                transparent
+            );
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: xor;
+            animation: borderGlow 4s ease-in-out infinite;
+        }
+        
+        @keyframes borderGlow {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+        
+        .card-title {
+            color: #f8fafc;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            animation: fadeInUp 1s ease-out 0.9s both;
+        }
+        
+        .card-description {
+            color: #cbd5e1;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 32px;
+            animation: fadeInUp 1s ease-out 1.2s both;
+        }
+        
+        /* Features grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 32px;
+            animation: fadeInUp 1s ease-out 1.5s both;
+        }
+        
+        .feature-item {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 12px;
+            padding: 16px 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-item:hover {
+            background: rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .feature-icon {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .feature-text {
+            color: #e2e8f0;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        /* CTA Button */
+        .cta-button {
+            background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #c084fc 100%);
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 700;
+            padding: 18px 36px;
+            width: 100%;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            animation: fadeInUp 1s ease-out 1.8s both;
+            box-shadow: 0 10px 40px rgba(139, 92, 246, 0.3);
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s;
+        }
+        
+        .cta-button:hover::before {
+            left: 100%;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(139, 92, 246, 0.5);
+            filter: brightness(1.1);
+        }
+        
+        .cta-button:active {
+            transform: translateY(-1px);
+        }
+        
+        /* Responsive design */
+        @media (max-width: 1024px) {
+            .welcome-wrapper {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                text-align: center;
+            }
+            
+            .hero-title {
+                font-size: 3rem;
+            }
+            
+            .welcome-card {
+                max-width: 500px;
+                margin: 0 auto;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 16px;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .hero-description {
+                font-size: 1.1rem;
+            }
+            
+            .welcome-card {
+                padding: 32px 24px;
+                border-radius: 24px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .hero-description {
+                font-size: 1rem;
+            }
+            
+            .welcome-card {
+                padding: 24px 20px;
+            }
+            
+            .card-title {
+                font-size: 1.5rem;
+            }
+        }
+        
+        /* Interactive effects */
+        .parallax-container {
+            transition: transform 0.1s ease-out;
+        }
+        
+        /* Loading animation */
+        @keyframes pulse {
+            0%, 100% { 
+                box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.5);
+                opacity: 1;
+            }
+            50% { 
+                box-shadow: 0 0 0 20px rgba(139, 92, 246, 0);
+                opacity: 0.8;
+            }
+        }
+        
+        .pulse {
+            animation: pulse 2.5s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="background"></div>
+    
+    <div class="bg-graphics">
+        <div class="document" style="--rotation: 15deg;"></div>
+        <div class="document" style="--rotation: -10deg;"></div>
+        <div class="document" style="--rotation: 20deg;"></div>
+        <div class="document" style="--rotation: -15deg;"></div>
+        <div class="document" style="--rotation: 8deg;"></div>
+    </div>
+    
+    <div class="container">
+        <div class="welcome-wrapper parallax-container">
+            <!-- Left side - Hero content -->
+            <div class="hero-content">
+                <h1 class="hero-title">Smart Resume Matching</h1>
+                <p class="hero-subtitle">Powered by AI Technology</p>
+                <p class="hero-description">
+                    Transform your recruitment process with intelligent resume analysis. 
+                    Match candidates to job descriptions with precision, get detailed scoring insights, 
+                    and streamline your hiring workflow with automated communications.
+                </p>
+                
+                
+            </div>
+            
+            <!-- Right side - Interactive card -->
+            <div class="welcome-card">
+                <h2 class="card-title">Get Started</h2>
+                <p class="card-description">
+                    Upload your job description and resumes to begin the matching process.
+                </p>
+                
+                <div class="features-grid">
+                    <div class="feature-item">
+                        
+                        <div class="feature-text">AI Analysis</div>
+                    </div>
+                    <div class="feature-item">
+                        
+                        <div class="feature-text">Smart Scoring</div>
+                    </div>
+                    <div class="feature-item">
+                        
+                        <div class="feature-text">Quick Results</div>
+                    </div>
+                    <div class="feature-item">
+                        
+                        <div class="feature-text">Auto Email</div>
+                    </div>
+                </div>
+                
+                <form method="GET" action="{% url 'upload' %}">
+                    <button type="submit" class="cta-button pulse">
+                    →
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const parallaxContainer = document.querySelector('.parallax-container');
+            const welcomeCard = document.querySelector('.welcome-card');
+            const button = document.querySelector('.cta-button');
+            
+            // Subtle parallax effect for desktop
+            if (window.innerWidth > 768) {
+                document.addEventListener('mousemove', function(e) {
+                    const xAxis = (window.innerWidth / 2 - e.pageX) / 100;
+                    const yAxis = (window.innerHeight / 2 - e.pageY) / 100;
+                    
+                    parallaxContainer.style.transform = `translate3d(${xAxis * 2}px, ${yAxis * 2}px, 0)`;
+                    welcomeCard.style.transform = `rotateY(${xAxis * 0.5}deg) rotateX(${yAxis * 0.5}deg)`;
+                });
+                
+                document.addEventListener('mouseleave', function() {
+                    parallaxContainer.style.transform = 'translate3d(0, 0, 0)';
+                    welcomeCard.style.transform = 'rotateY(0deg) rotateX(0deg)';
+                });
+            }
+            
+            // Enhanced button interaction
+            button.addEventListener('click', function(e) {
+                // Create ripple effect
+                const ripple = document.createElement('span');
+                const rect = button.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.cssText = `
+                    position: absolute;
+                    width: ${size}px;
+                    height: ${size}px;
+                    left: ${x}px;
+                    top: ${y}px;
+                    background: radial-gradient(circle, rgba(255,255,255,0.6) 0%, transparent 70%);
+                    border-radius: 50%;
+                    transform: scale(0);
+                    animation: rippleEffect 0.8s ease-out;
+                    pointer-events: none;
+                `;
+                
+                button.appendChild(ripple);
+                
+                setTimeout(() => ripple.remove(), 800);
+            });
+            
+            // Intersection Observer for scroll animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe elements for scroll animations
+            document.querySelectorAll('.hero-content, .welcome-card').forEach(el => {
+                observer.observe(el);
+            });
+        });
+        
+        // Add ripple animation keyframes
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes rippleEffect {
+                to {
+                    transform: scale(2.5);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

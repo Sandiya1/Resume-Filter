@@ -1,0 +1,185 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Upload - Resume Matcher</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0d0d0d 0%, #1a1a2e 100%);
+      color: #eee;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+    }
+
+    .upload-container {
+      background: rgba(20, 20, 35, 0.95);
+      border-radius: 15px;
+      box-shadow: 0 8px 32px rgba(128,0,255,0.25),
+                  0 0 0 1px rgba(255,255,255,0.05);
+      padding: 40px 50px;
+      max-width: 850px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+    }
+
+    .upload-container h2 {
+      grid-column: 1 / -1;
+      text-align: center;
+      color: #bb86fc;
+      font-size: 1.8em;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .message-box {
+      grid-column: 1 / -1;
+      background: rgba(155, 0, 255, 0.1);
+      color: #e0d4ff;
+      padding: 14px 16px;
+      border-left: 4px solid #bb86fc;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      text-align: center;
+      font-size: 0.95em;
+      font-weight: 500;
+    }
+
+    .form-section {
+      margin-bottom: 18px;
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #cfcfcf;
+      font-size: 0.95em;
+    }
+
+    input[type="file"],
+    input[type="number"],
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.15);
+      font-size: 0.95em;
+      background: rgba(255,255,255,0.05);
+      color: #eee;
+      transition: border 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    input[type="file"]::file-selector-button {
+      background: linear-gradient(135deg, #7b2ff7 0%, #9d4edd 100%);
+      color: white;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 6px;
+      margin-right: 10px;
+      cursor: pointer;
+      font-size: 0.9em;
+      font-weight: 500;
+      transition: background 0.3s ease;
+    }
+
+    input[type="file"]::file-selector-button:hover {
+      background: linear-gradient(135deg, #9d4edd 0%, #7b2ff7 100%);
+    }
+
+    input[type="file"]:focus,
+    input[type="number"]:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #bb86fc;
+      box-shadow: 0 0 8px rgba(187,134,252,0.4);
+    }
+
+    input[type="number"] {
+      max-width: 120px;
+    }
+
+    textarea::placeholder {
+      color: rgba(255,255,255,0.5);
+    }
+
+    button {
+      grid-column: 1 / -1;
+      width: 100%;
+      padding: 14px;
+      margin-top: 10px;
+      background: linear-gradient(135deg, #7b2ff7 0%, #9d4edd 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 4px 15px rgba(155, 0, 255, 0.3);
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, #9d4edd 0%, #7b2ff7 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(155, 0, 255, 0.4);
+    }
+
+    @media (max-width: 768px) {
+      .upload-container {
+        grid-template-columns: 1fr;
+        padding: 30px 25px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="upload-container">
+    <h2>Upload Resumes & Job Description</h2>
+
+    {% if message %}
+    <div class="message-box">{{ message }}</div>
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data" style="display: contents;">
+      {% csrf_token %}
+
+      <div class="form-section">
+        <label for="resumes">📁 Upload Resumes (Max 50):</label>
+        <input type="file" id="resumes" name="resumes" multiple required accept=".pdf,.docx">
+      </div>
+
+      
+
+      <div class="form-section" style="grid-column: 1 / -1;">
+        <label for="jd_text">📝Job Description:</label>
+        <textarea name="jd_text" id="jd_text" rows="4" placeholder="Enter job description here..."></textarea>
+      </div>
+
+      <div class="form-section">
+        <label for="top_n">🔢 Top N Resumes:</label>
+        <input type="number" name="top_n" id="top_n" value="3" min="1">
+      </div>
+
+      <button type="submit">Match Resumes</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("resumes").addEventListener("change", function () {
+      if (this.files.length > 50) {
+        alert("You can only upload a maximum of 50 resumes.");
+        this.value = "";
+      }
+    });
+  </script>
+</body>
+</html>
